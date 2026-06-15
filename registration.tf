@@ -2,7 +2,7 @@ resource "aws_cloudformation_stack" "registration" {
   count = var.registration_method == "cloudformation" ? 1 : 0
 
   name = "${local.name_prefix}AttributeRegistration"
-
+  
   template_body = jsonencode({
     Resources = {
       AttributeRegistration = {
@@ -31,17 +31,9 @@ resource "aws_cloudformation_stack" "registration" {
   tags = local.cloudformation_stack_tags
 }
 
-data "http" "attribute_registration" {
-  count = var.registration_method == "http" ? 1 : 0
-  request_headers = {
-    "Content-Type"  = "application/json"
-    "Authorization" = "Bearer ${var.token}",
-  }
 
-  url    = "https://sensor.app.attrb.io/api/v1/aws"
-  method = "POST"
-
-  request_body = jsonencode(merge(
+output "registration" {
+  value = jsonencode(merge(
     {
       "organization_id" = var.organization_id,
       "account_id"      = data.aws_caller_identity.current.account_id,
@@ -54,4 +46,5 @@ data "http" "attribute_registration" {
       "cur_prefix"      = local.s3_prefix,
       "cur_export_name" = local.export_name
   } : {}))
+  sensitive = true
 }

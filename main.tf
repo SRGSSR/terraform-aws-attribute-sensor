@@ -1,4 +1,5 @@
 resource "aws_s3_bucket" "this" {
+  region = "eu-central-1"
   count = var.account_type == "management" ? 1 : 0
 
   bucket = "${local.name_prefix}attribute-cur-${local.region}-${data.aws_caller_identity.current.account_id}"
@@ -7,6 +8,7 @@ resource "aws_s3_bucket" "this" {
 }
 
 resource "aws_s3_bucket_ownership_controls" "this" {
+  region = "eu-central-1"
   count = var.account_type == "management" ? 1 : 0
 
   bucket = aws_s3_bucket.this[0].id
@@ -24,6 +26,7 @@ resource "aws_s3_bucket_ownership_controls" "this" {
 }
 
 resource "aws_s3_bucket_acl" "this" {
+  region = "eu-central-1"
   count = var.account_type == "management" ? 1 : 0
 
   depends_on = [aws_s3_bucket_ownership_controls.this[0]]
@@ -33,6 +36,7 @@ resource "aws_s3_bucket_acl" "this" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
+  region = "eu-central-1"
   count = var.account_type == "management" ? 1 : 0
 
   bucket = aws_s3_bucket.this[0].id
