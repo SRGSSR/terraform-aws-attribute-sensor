@@ -4,6 +4,12 @@ variable "name_prefix" {
   default     = ""
 }
 
+variable "bucket_region" {
+  type        = string
+  description = "(*Optional*) Region of the S3 bucket that receives the CUR 2.0 export. Defaults to the provider region (us-east-1); the export itself stays in us-east-1."
+  default     = null
+}
+
 variable "organization_id" {
   type        = string
   description = "(**Required**) The Organization ID provided by Attribute."
